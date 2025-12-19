@@ -25,7 +25,7 @@ struct ComfortSettings
   double speed_fraction_of_limit  = 1.0;  // [0.0 - 1.0] target cruising speed as fraction of road limit
 
   double time_headway     = 3.0; // [s] time headway
-  double distance_headway = 4.0; // [m] safety distance after vehicle length
+  double distance_headway = 6.0; // [m] safety distance after vehicle length
 
   ComfortSettings() = default;
 

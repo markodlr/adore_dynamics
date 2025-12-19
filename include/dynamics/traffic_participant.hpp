@@ -74,14 +74,15 @@ struct TrafficParticipant
   int                              id;
   PhysicalVehicleParameters        physical_parameters; // Physical parameters of the vehicle
 
-  std::optional<math::Point2d> goal_point = std::nullopt; // Goal point
-  std::optional<int>           v2x_id     = std::nullopt; // V2X ID
-  std::optional<Trajectory>    trajectory = std::nullopt; // Predicted or planned trajectory
+  std::optional<math::Point2d> goal_point     = std::nullopt; // Goal point
+  std::optional<int>           v2x_id         = std::nullopt; // V2X ID
+  std::optional<Trajectory>    trajectory     = std::nullopt; // Predicted or planned trajectory
   std::optional<Trajectory>    mrm_trajectory = std::nullopt; // mrm trajectory
-  std::optional<map::Route>    route      = std::nullopt; // Route information
+  std::optional<map::Route>    route          = std::nullopt; // Route information
 
   // calculate participant corners
-  math::Polygon2d get_corners() const;
+  math::Polygon2d get_corners( const double longitudinal_inflation = 0.0, const double lateral_inflation = 0.0 ) const;
+  math::Polygon2d get_corners_at_t( double t_abs, double longitudinal_inflation = 0.0, double lateral_inflation = 0.0 ) const;
 };
 
 struct TrafficParticipantSet

@@ -13,34 +13,54 @@
 
 #include "dynamics/traffic_participant.hpp"
 
+#include "adore_math/angles.h"
+#include "adore_math/fast_trig.h"
+
 namespace adore
 {
 namespace dynamics
 {
 math::Polygon2d
-TrafficParticipant::get_corners() const
+TrafficParticipant::get_corners_at_t( double t_abs, const double longitudinal_inflation, const double lateral_inflation ) const
 {
-  // Compute half dimensions.
-  double half_length = physical_parameters.body_length / 2.0;
-  double half_width  = physical_parameters.body_width / 2.0;
+  dynamics::VehicleStateDynamic s = state;
 
-  // Define the four corners in local coordinates.
-  // The order here is: rear-right, rear-left, front-left, front-right.
+  if( trajectory.has_value() )
+    s = trajectory->get_state_at_time( t_abs );
+
+  const double half_length = physical_parameters.body_length / 2.0 + longitudinal_inflation;
+  const double half_width  = physical_parameters.body_width / 2.0 + lateral_inflation;
+
   math::Polygon2d corners;
-  corners.points = { math::Point2d( -half_length, -half_width ), math::Point2d( -half_length, half_width ),
-                     math::Point2d( half_length, half_width ), math::Point2d( half_length, -half_width ) };
+  corners.points = {
+    math::Point2d( -half_length, -half_width ), // rear-right
+    math::Point2d( -half_length, half_width ),  // rear-left
+    math::Point2d( half_length, half_width ),   // front-left
+    math::Point2d( half_length, -half_width )   // front-right
+  };
 
-  double cos_yaw = std::cos( state.yaw_angle );
-  double sin_yaw = std::sin( state.yaw_angle );
+  const double cos_yaw = math::fast_cos( s.yaw_angle );
+  const double sin_yaw = math::fast_sin( s.yaw_angle );
 
-  // Convert local corners to global coordinates using the vehicle's pose.
   for( auto& corner : corners.points )
   {
-    corner.x = state.x + corner.x * cos_yaw - corner.y * sin_yaw;
-    corner.y = state.y + corner.x * sin_yaw + corner.y * cos_yaw;
+    const double local_x = corner.x;
+    const double local_y = corner.y;
+
+    const double world_x = s.x + local_x * cos_yaw - local_y * sin_yaw;
+    const double world_y = s.y + local_x * sin_yaw + local_y * cos_yaw;
+
+    corner.x = world_x;
+    corner.y = world_y;
   }
 
   return corners;
+}
+
+math::Polygon2d
+TrafficParticipant::get_corners( const double longitudinal_inflation, const double lateral_inflation ) const
+{
+  return get_corners_at_t( state.time, lateral_inflation, longitudinal_inflation );
 }
 
 void

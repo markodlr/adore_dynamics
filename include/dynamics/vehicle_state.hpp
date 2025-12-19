@@ -13,16 +13,6 @@
 
 #pragma once
 
-/********************************************************************************
- * Copyright (C) 2017-2025 German Aerospace Center (DLR).
- * Eclipse ADORe, Automated Driving Open Research https://eclipse.org/adore
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *    Mikkel Skov Maarssø
- *    Marko Mizdrak
- ********************************************************************************/
 #include "adore_math/angles.h"
 
 #include "dynamics/integration.hpp"
