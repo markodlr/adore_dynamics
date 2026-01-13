@@ -22,6 +22,7 @@ struct ComfortSettings
   double max_acceleration         = 2.0;  // [m/s^2] softer than physical max
   double min_acceleration         = -2.0; // [m/s^2] softer than physical min (braking)
   double max_lateral_acceleration = 2.0;  // [m/s^2] cornering comfort limit
+  double max_jerk                 = 2.0;  // [m/s^3] comfort limit for longitudinal jerk
   double speed_fraction_of_limit  = 1.0;  // [0.0 - 1.0] target cruising speed as fraction of road limit
 
   double time_headway     = 3.0; // [s] time headway
@@ -29,10 +30,12 @@ struct ComfortSettings
 
   ComfortSettings() = default;
 
-  ComfortSettings( double max_acc, double min_acc, double lat_acc, double speed_fraction ) :
+  ComfortSettings( double v_max, double max_acc, double min_acc, double lat_acc, double jerk_max, double speed_fraction ) :
+    max_speed( v_max ),
     max_acceleration( max_acc ),
     min_acceleration( min_acc ),
     max_lateral_acceleration( lat_acc ),
+    max_jerk( jerk_max ),
     speed_fraction_of_limit( speed_fraction )
   {}
 

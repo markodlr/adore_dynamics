@@ -60,7 +60,7 @@ TrafficParticipant::get_corners_at_t( double t_abs, const double longitudinal_in
 math::Polygon2d
 TrafficParticipant::get_corners( const double longitudinal_inflation, const double lateral_inflation ) const
 {
-  return get_corners_at_t( state.time, lateral_inflation, longitudinal_inflation );
+  return get_corners_at_t( state.time, longitudinal_inflation, lateral_inflation );
 }
 
 void
